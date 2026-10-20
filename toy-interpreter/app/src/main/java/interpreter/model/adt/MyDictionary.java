@@ -24,8 +24,19 @@ public class MyDictionary<K, V> implements IDictionary<K, V> {
         map.put(key, value);
     }
 
-    // TODO: update(key, value) - should throw if key doesn't exist
-    // TODO: remove(key) - should throw if key doesn't exist
+    @Override
+    public void update(K key, V value) throws ADTException {
+        if (!map.containsKey(key))
+            throw new ADTException("key '" + key + "' is not defined");
+        map.put(key, value);
+    }
+
+    @Override
+    public void remove(K key) throws ADTException {
+        if (!map.containsKey(key))
+            throw new ADTException("key '" + key + "' is not defined");
+        map.remove(key);
+    }
 
     @Override
     public Map<K, V> entries() {

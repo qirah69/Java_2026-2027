@@ -36,6 +36,27 @@ class MyDictionaryTest {
         assertThrows(ADTException.class, () -> dict.lookup("noSuchKey"));
     }
 
-    // TODO: test update once implemented
-    // TODO: test remove once implemented
+    @Test
+    void updateChangesValue() throws ADTException {
+        dict.put("v", 10);
+        dict.update("v", 20);
+        assertEquals(20, dict.lookup("v"));
+    }
+
+    @Test
+    void updateMissingKeyThrows() {
+        assertThrows(ADTException.class, () -> dict.update("ghost", 99));
+    }
+
+    @Test
+    void removeDeletesKey() throws ADTException {
+        dict.put("k", 7);
+        dict.remove("k");
+        assertFalse(dict.isDefined("k"));
+    }
+
+    @Test
+    void removeMissingKeyThrows() {
+        assertThrows(ADTException.class, () -> dict.remove("absent"));
+    }
 }
