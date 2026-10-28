@@ -25,7 +25,6 @@ public class PrgState {
         this.symTable = symTable;
         this.out = out;
         this.originalProgram = program;
-        // Bootstrap: push the whole program onto the execution stack.
         exeStack.push(program);
     }
 
@@ -46,8 +45,6 @@ public class PrgState {
     public IStmt getOriginalProgram() {
         return originalProgram;
     }
-
-    // --- Setters (may be useful in later assignments) ---
 
     public void setExeStack(IStack<IStmt> exeStack) {
         this.exeStack = exeStack;
