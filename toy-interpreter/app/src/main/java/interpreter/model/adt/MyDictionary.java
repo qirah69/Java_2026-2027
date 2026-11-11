@@ -47,4 +47,9 @@ public class MyDictionary<K, V> implements IDictionary<K, V> {
     public String toString() {
         return map.toString();
     }
+
+    @Override
+    public Map<K, V> toMap() {
+        return Map.copyOf(map);
+    }
 }

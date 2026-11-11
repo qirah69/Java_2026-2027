@@ -1,107 +1,55 @@
 package interpreter.model;
 
-import interpreter.model.adt.IDictionary;
-import interpreter.model.adt.IList;
-import interpreter.model.adt.IStack;
-import interpreter.model.adt.MyDictionary;
-import interpreter.model.adt.MyList;
-import interpreter.model.adt.MyStack;
+import interpreter.model.adt.*;
 import interpreter.model.stmt.IStmt;
 import interpreter.model.value.IValue;
+import interpreter.model.value.StringValue;
+import java.io.BufferedReader;
 
-import java.util.Map;
-import java.util.Objects;
 public class PrgState {
     private IStack<IStmt> exeStack;
     private IDictionary<String, IValue> symTable;
     private IList<IValue> out;
+    private IDictionary<StringValue, BufferedReader> fileTable;
     private final IStmt originalProgram;
 
-    public PrgState(IStack<IStmt> exeStack,
-                    IDictionary<String, IValue> symTable,
-                    IList<IValue> out,
-                    IStmt program) {
+    public PrgState(IStack<IStmt> exeStack, IDictionary<String, IValue> symTable, IList<IValue> out, IDictionary<StringValue, BufferedReader> fileTable, IStmt program) {
         this.exeStack = exeStack;
         this.symTable = symTable;
         this.out = out;
+        this.fileTable = fileTable;
         this.originalProgram = program;
         exeStack.push(program);
     }
 
-    // --- Getters ---
-
-    public IStack<IStmt> getExeStack() {
-        return exeStack;
+    public static PrgState of(IStmt program) {
+        return new PrgState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new MyDictionary<>(), program);
     }
 
-    public IDictionary<String, IValue> getSymTable() {
-        return symTable;
-    }
+    public IStack<IStmt> getExeStack() { return exeStack; }
+    public IDictionary<String, IValue> getSymTable() { return symTable; }
+    public IList<IValue> getOut() { return out; }
+    public IDictionary<StringValue, BufferedReader> getFileTable() { return fileTable; }
+    public IStmt getOriginalProgram() { return originalProgram; }
 
-    public IList<IValue> getOut() {
-        return out;
-    }
+    // Kept to not break A2 tests
+    public void setExeStack(IStack<IStmt> exeStack) { this.exeStack = exeStack; }
+    public void setSymTable(IDictionary<String, IValue> symTable) { this.symTable = symTable; }
+    public void setOut(IList<IValue> out) { this.out = out; }
 
-    public IStmt getOriginalProgram() {
-        return originalProgram;
-    }
-
-    public void setExeStack(IStack<IStmt> exeStack) {
-        this.exeStack = exeStack;
-    }
-
-    public void setSymTable(IDictionary<String, IValue> symTable) {
-        this.symTable = symTable;
-    }
-
-    public void setOut(IList<IValue> out) {
-        this.out = out;
+    public String toLogString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ExeStack:\n");
+        exeStack.toList().forEach(s -> sb.append(s).append('\n'));
+        sb.append("SymTable:\n");
+        symTable.toMap().forEach((k, v) -> sb.append(k).append(" --> ").append(v).append('\n'));
+        sb.append("Out:\n");
+        out.toList().forEach(v -> sb.append(v).append('\n'));
+        sb.append("FileTable:\n");
+        fileTable.toMap().keySet().forEach(f -> sb.append(f.val()).append('\n'));
+        return sb.toString();
     }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-
-        // --- Execution Stack (top first) ---
-        sb.append("  ExeStack:\n");
-        var stmts = exeStack.toList();
-        if (stmts.isEmpty()) {
-            sb.append("    (empty)\n");
-        } else {
-            for (int i = 0; i < stmts.size(); i++) {
-                sb.append(i == 0 ? "    --> " : "        ");
-                sb.append(stmts.get(i));
-                sb.append("\n");
-            }
-        }
-
-        // --- Symbol Table ---
-        sb.append("  SymTable:\n");
-        var vars = symTable.entries();
-        if (vars.isEmpty()) {
-            sb.append("    (empty)\n");
-        } else {
-            vars.entrySet().stream()
-                    .sorted(Map.Entry.comparingByKey())
-                    .forEach(e -> sb.append("    ")
-                            .append(e.getKey())
-                            .append(" = ")
-                            .append(e.getValue())
-                            .append("\n"));
-        }
-
-        // --- Output ---
-        sb.append("  Output:\n");
-        if (out.size() == 0) {
-            sb.append("    (empty)\n");
-        } else {
-            for (int i = 0; i < out.size(); i++) {
-                try {
-                    sb.append("    [").append(i).append("] ").append(out.get(i)).append("\n");
-                } catch (Exception ignored) {}
-            }
-        }
-
-        return sb.toString();
-    }
+    public String toString() { return toLogString(); }
 }
