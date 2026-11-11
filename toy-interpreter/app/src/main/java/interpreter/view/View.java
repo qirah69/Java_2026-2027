@@ -49,7 +49,7 @@ public class View {
 
         try {
             PrgState state = PrgState.of(entry.program());
-            Controller ctrl = new Controller(new Repository(state), true);
+            Controller ctrl = new Controller(new Repository(state, "log.txt"), true);
             ctrl.allStep();
             System.out.println();
             System.out.println("  " + "=".repeat(40));
