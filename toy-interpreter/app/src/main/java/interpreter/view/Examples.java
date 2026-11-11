@@ -4,8 +4,10 @@ import interpreter.model.exp.*;
 import interpreter.model.stmt.*;
 import interpreter.model.type.BoolType;
 import interpreter.model.type.IntType;
+import interpreter.model.type.StringType;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IntValue;
+import interpreter.model.value.StringValue;
 
 
 public class Examples {
@@ -60,4 +62,26 @@ public class Examples {
                             )
                     )
             );
+    public static IStmt fileExample(String fileName) {
+        return new CompStmt(new VarDeclStmt("varf", new StringType()),
+                new CompStmt(new AssignStmt("varf", new ValueExp(new StringValue(fileName))),
+                        new CompStmt(new OpenRFileStmt(new VarExp("varf")),
+                                new CompStmt(new VarDeclStmt("varc", new IntType()),
+                                        new CompStmt(new ReadFileStmt(new VarExp("varf"), "varc"),
+                                                new CompStmt(new PrintStmt(new VarExp("varc")),
+                                                        new CompStmt(new ReadFileStmt(new VarExp("varf"), "varc"),
+                                                                new CompStmt(new PrintStmt(new VarExp("varc")),
+                                                                        new CloseRFileStmt(new VarExp("varf"))))))))));
+    }
+
+    public static final IStmt EX4 = fileExample("test.in");
+
+    public static final IStmt EX5 =
+            new CompStmt(new VarDeclStmt("a", new IntType()),
+                    new CompStmt(new VarDeclStmt("b", new IntType()),
+                            new CompStmt(new AssignStmt("a", new ValueExp(new IntValue(5))),
+                                    new CompStmt(new AssignStmt("b", new ValueExp(new IntValue(7))),
+                                            new IfStmt(new RelExp(RelOp.LT, new VarExp("a"), new VarExp("b")),
+                                                    new PrintStmt(new VarExp("a")),
+                                                    new PrintStmt(new VarExp("b")))))));
 }
