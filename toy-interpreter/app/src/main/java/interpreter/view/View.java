@@ -48,9 +48,7 @@ public class View {
         System.out.println("  " + "=".repeat(40));
 
         try {
-            PrgState state = new PrgState(
-                    new MyStack<>(), new MyDictionary<>(), new MyList<>(),
-                    entry.program());
+            PrgState state = PrgState.of(entry.program());
             Controller ctrl = new Controller(new Repository(state), true);
             ctrl.allStep();
             System.out.println();

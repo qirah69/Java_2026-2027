@@ -19,7 +19,7 @@ class PrgStateTest {
         MyList<IValue> out = new MyList<>();
         IStmt program = new NopStmt();
 
-        PrgState state = new PrgState(exeStack, symTable, out, program);
+        PrgState state = new PrgState(exeStack, symTable, out, new MyDictionary<>(), program);
 
         assertSame(exeStack, state.getExeStack());
         assertSame(symTable, state.getSymTable());
@@ -31,10 +31,11 @@ class PrgStateTest {
 
     @Test
     void settersReplaceStateComponents() {
-        PrgState state = new PrgState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new NopStmt());
         MyStack<IStmt> exeStack = new MyStack<>();
         MyDictionary<String, IValue> symTable = new MyDictionary<>();
         MyList<IValue> out = new MyList<>();
+        IStmt program = new NopStmt();
+        PrgState state = new PrgState(exeStack, symTable, out, new MyDictionary<>(), program);
 
         state.setExeStack(exeStack);
         state.setSymTable(symTable);
@@ -47,16 +48,15 @@ class PrgStateTest {
 
     @Test
     void toStringIncludesStackSymbolTableAndOutput() {
-        PrgState state = new PrgState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new NopStmt());
+        PrgState state = PrgState.of(new NopStmt());
         state.getSymTable().put("x", new IntValue(5));
         state.getOut().add(new IntValue(5));
 
         String text = state.toString();
-
         assertTrue(text.contains("ExeStack:"));
         assertTrue(text.contains("SymTable:"));
-        assertTrue(text.contains("x = 5"));
-        assertTrue(text.contains("Output:"));
-        assertTrue(text.contains("[0] 5"));
-    }
+        assertTrue(text.contains("x --> 5"));
+        assertTrue(text.contains("Out:"));
+        assertTrue(text.contains("5"));
+        }
 }

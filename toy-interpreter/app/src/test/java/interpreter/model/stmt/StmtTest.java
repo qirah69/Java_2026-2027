@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class StmtTest {
     private static PrgState newState() {
-        return new PrgState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new NopStmt());
+        return PrgState.of(new NopStmt());
     }
 
     private static IExp value(IValue value) {
