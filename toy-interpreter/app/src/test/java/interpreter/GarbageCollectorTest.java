@@ -44,4 +44,19 @@ class GarbageCollectorTest {
         // not directly from the SymTable. Address 4 is garbage.
         assertEquals(Set.of(2, 3), kept.keySet());
     }
+
+    @Test
+    void safeCollectorKeepsLocationsReachableThroughTheHeap() {
+        Set<Integer> roots = GarbageCollector.getAddrFromSymTable(symTable);
+        Map<Integer, IValue> kept = GarbageCollector.safeGarbageCollector(roots, heap);
+
+        // Address 1 is kept because 2 refers to it. Address 4 is garbage.
+        assertEquals(Set.of(1, 2, 3), kept.keySet());
+    }
+
+    @Test
+    void reachableAddressesFollowsRefValuesUntilFixedPoint() {
+        Set<Integer> reachable = GarbageCollector.reachableAddresses(Set.of(3), heap);
+        assertEquals(Set.of(2, 3), reachable);
+    }
 }
