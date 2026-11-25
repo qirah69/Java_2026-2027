@@ -21,7 +21,7 @@ public record ReadFileStmt(IExp exp, String varName) implements IStmt {
         }
 
         // 2. Check if the file name expression evaluates to a string
-        IValue val = exp.eval(symTable);
+        IValue val = exp.eval(state.getSymTable(), state.getHeap());
         if (!(val instanceof StringValue fileName)) {
             throw new StatementException("readFile: " + exp + " is not a string");
         }

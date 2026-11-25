@@ -3,13 +3,14 @@ package interpreter.model.exp;
 import interpreter.exceptions.ExpressionException;
 import interpreter.exceptions.MyException;
 import interpreter.model.adt.IDictionary;
+import interpreter.model.adt.IHeap;
 import interpreter.model.value.*;
 
 public record RelExp(RelOp op, IExp left, IExp right) implements IExp {
     @Override
-    public IValue eval(IDictionary<String, IValue> symTable) throws MyException {
-        IValue l = left.eval(symTable);
-        IValue r = right.eval(symTable);
+    public IValue eval(IDictionary<String, IValue> symTable, IHeap heap) throws MyException {
+        IValue l = left.eval(symTable, heap);
+        IValue r = right.eval(symTable, heap);
 
         if (l instanceof IntValue(int a) && r instanceof IntValue(int b)) {
             return new BoolValue(switch (op) {

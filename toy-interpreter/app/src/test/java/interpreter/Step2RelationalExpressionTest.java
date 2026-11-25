@@ -1,6 +1,7 @@
 package interpreter;
 
 import interpreter.model.adt.MyDictionary;
+import interpreter.model.adt.MyHeap;
 import interpreter.model.exp.*;
 import interpreter.model.value.*;
 import org.junit.jupiter.api.Test;
@@ -11,13 +12,13 @@ class Step2RelationalExpTest {
     void testRelationalExpInts() throws Exception {
         var sym = new MyDictionary<String, IValue>();
         var exp = new RelExp(RelOp.GT, new ValueExp(new IntValue(5)), new ValueExp(new IntValue(3)));
-        assertEquals(new BoolValue(true), exp.eval(sym));
+        assertEquals(new BoolValue(true), exp.eval(sym, new MyHeap()));
     }
 
     @Test
     void testRelationalExpStrings() throws Exception {
         var sym = new MyDictionary<String, IValue>();
         var exp = new RelExp(RelOp.EQ, new ValueExp(new StringValue("a")), new ValueExp(new StringValue("a")));
-        assertEquals(new BoolValue(true), exp.eval(sym));
+        assertEquals(new BoolValue(true), exp.eval(sym, new MyHeap()));
     }
 }
