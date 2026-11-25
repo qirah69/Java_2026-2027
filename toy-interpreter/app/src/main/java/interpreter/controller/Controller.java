@@ -37,7 +37,7 @@ public class Controller {
             repo.logPrgStateExec(); // Log after step
 
             // Garbage collection
-            prg.getHeap().setContent(GarbageCollector.unsafeGarbageCollector(
+            prg.getHeap().setContent(GarbageCollector.safeGarbageCollector(
                     GarbageCollector.getAddrFromSymTable(prg.getSymTable().toMap().values()),
                     prg.getHeap().getContent()
             ));
