@@ -1,6 +1,5 @@
-package interpreter;
+package interpreter.controller;
 
-import interpreter.controller.GarbageCollector;
 import interpreter.model.type.IntType;
 import interpreter.model.type.RefType;
 import interpreter.model.value.IValue;
@@ -56,7 +55,25 @@ class GarbageCollectorTest {
 
     @Test
     void reachableAddressesFollowsRefValuesUntilFixedPoint() {
-        Set<Integer> reachable = GarbageCollector.reachableAddresses(Set.of(3), heap);
-        assertEquals(Set.of(2, 3), reachable);
+        // FIXED: Starting from root 2, we should reach 2 and 1 (since 2 points to 1)
+        Set<Integer> reachable = GarbageCollector.reachableAddresses(Set.of(2), heap);
+        assertEquals(Set.of(1, 2), reachable);
+    }
+
+    @Test
+    void reachableAddressesLab8Exercise2() {
+        // SymTable: a -> (3, Ref(int))
+        Set<Integer> roots = Set.of(3);
+        // Heap: 1 -> 7, 2 -> 8, 3 -> (2, int), 4 -> (1, int), 5 -> (4, Ref(int))
+        Map<Integer, IValue> testHeap = Map.of(
+                1, new IntValue(7),
+                2, new IntValue(8),
+                3, new RefValue(2, new IntType()),
+                4, new RefValue(1, new IntType()),
+                5, new RefValue(4, new RefType(new IntType()))
+        );
+
+        Set<Integer> reachable = GarbageCollector.reachableAddresses(roots, testHeap);
+        assertEquals(Set.of(2, 3), reachable); // 3 points to 2, 2 is an int
     }
 }
