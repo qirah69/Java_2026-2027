@@ -1,13 +1,17 @@
 package interpreter.model;
 
 import interpreter.model.adt.MyDictionary;
+import interpreter.model.adt.MyHeap;
 import interpreter.model.adt.MyList;
 import interpreter.model.adt.MyStack;
 import interpreter.model.stmt.IStmt;
 import interpreter.model.stmt.NopStmt;
 import interpreter.model.value.IValue;
 import interpreter.model.value.IntValue;
+import interpreter.model.value.StringValue;
 import org.junit.jupiter.api.Test;
+
+import java.io.BufferedReader;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,7 +23,7 @@ class PrgStateTest {
         MyList<IValue> out = new MyList<>();
         IStmt program = new NopStmt();
 
-        PrgState state = new PrgState(exeStack, symTable, out, new MyDictionary<>(), program);
+        PrgState state = new PrgState(exeStack, symTable, out, new MyDictionary<StringValue, BufferedReader>(), new MyHeap(), program);
 
         assertSame(exeStack, state.getExeStack());
         assertSame(symTable, state.getSymTable());
@@ -35,7 +39,7 @@ class PrgStateTest {
         MyDictionary<String, IValue> symTable = new MyDictionary<>();
         MyList<IValue> out = new MyList<>();
         IStmt program = new NopStmt();
-        PrgState state = new PrgState(exeStack, symTable, out, new MyDictionary<>(), program);
+        PrgState state = new PrgState(exeStack, symTable, out, new MyDictionary<>(), new MyHeap(), program);
 
         state.setExeStack(exeStack);
         state.setSymTable(symTable);
