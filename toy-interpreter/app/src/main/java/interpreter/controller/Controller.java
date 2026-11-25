@@ -6,7 +6,6 @@ import interpreter.model.PrgState;
 import interpreter.model.stmt.IStmt;
 import interpreter.repository.IRepository;
 
-
 public class Controller {
     private final IRepository repo;
     private final boolean displayFlag;
@@ -27,7 +26,7 @@ public class Controller {
     public void allStep() throws MyException {
         PrgState prg = repo.getCrtPrg();
 
-        repo.logPrgStateExec(); // <-- Log initial state
+        repo.logPrgStateExec(); // Log initial state
         int step = 0;
         if (displayFlag) display(prg, step);
 
@@ -35,7 +34,16 @@ public class Controller {
             oneStep(prg);
             step++;
 
-            repo.logPrgStateExec(); // <-- Log after each step
+            repo.logPrgStateExec(); // Log after step
+
+            // Garbage collection
+            prg.getHeap().setContent(GarbageCollector.unsafeGarbageCollector(
+                    GarbageCollector.getAddrFromSymTable(prg.getSymTable().toMap().values()),
+                    prg.getHeap().getContent()
+            ));
+
+            repo.logPrgStateExec(); // Log after GC
+
             if (displayFlag) display(prg, step);
         }
     }
